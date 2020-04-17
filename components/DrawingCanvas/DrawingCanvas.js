@@ -114,8 +114,8 @@ export default function DrawingCanvas() {
   const mouseUp = canvasMouseUp(canvasEl)(stateObj)
   const mouseMove = canvasMouseMove(canvasEl)(stateObj)
 
-  const touchStart = canvasTouchStart(canvasEl)(stateObj)
-  const touchEnd = canvasTouchEnd(canvasEl)(stateObj)
+  const touchStart = canvasTouchStart(stateObj)
+  const touchEnd = canvasTouchEnd(stateObj)
   const touchMove = canvasTouchMove(canvasEl)(stateObj)
 
   return (
@@ -132,6 +132,7 @@ export default function DrawingCanvas() {
       onTouchStart={touchStart}
       onTouchEnd={touchEnd}
       onTouchMove={touchMove}
+      onScroll={e => e.preventDefault()}
     />
   )
 }
