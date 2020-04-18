@@ -1,19 +1,21 @@
-const express = require('express')
-const next = require('next')
-
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
-const handle = app.getRequestHandler()
+const next = require('next')({ dev })
+const handle = next.getRequestHandler()
 
-app.prepare().then(() => {
-  const server = express()
+next.prepare().then(() => {
+  const app = require('express')()
+  const http = require('http').createServer(app)
 
-  server.all('*', (req, res) => {
+  const io = require('socket.io').listen(http)
+
+  app.use('/api', require('./api/router')(io))
+
+  app.all('*', (req, res) => {
     return handle(req, res)
   })
 
-  server.listen(port, err => {
+  http.listen(port, err => {
     if (err) throw err
     console.log(`> Ready on http://localhost:${port}`)
   })

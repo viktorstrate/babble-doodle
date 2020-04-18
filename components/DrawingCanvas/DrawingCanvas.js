@@ -62,15 +62,15 @@ const defaultState = {
 
 let context = null
 const CANVAS_SCALE = 2
-const setupContext = canvas => {
+const setupContext = (canvas, { width, height }) => {
   console.log('setup canvas', canvas)
   if (canvas == null) {
     context = null
     return
   }
 
-  canvas.width = 640 * CANVAS_SCALE
-  canvas.height = 480 * CANVAS_SCALE
+  canvas.width = width * CANVAS_SCALE
+  canvas.height = height * CANVAS_SCALE
 
   context = canvas.getContext('2d')
   context.lineJoin = 'round'
@@ -78,13 +78,13 @@ const setupContext = canvas => {
   context.lineWidth = 2 * CANVAS_SCALE
 }
 
-export default function DrawingCanvas() {
+export default function DrawingCanvas({ width, height }) {
   const canvasEl = useRef(null)
   const [state, setState] = useState(defaultState)
   const stateObj = { state, setState }
 
   useEffect(() => {
-    setupContext(canvasEl.current)
+    setupContext(canvasEl.current, { width, height })
   }, [canvasEl])
 
   if (canvasEl.current) redraw(context)(stateObj)
@@ -101,8 +101,7 @@ export default function DrawingCanvas() {
     <canvas
       id="drawing-canvas"
       className={styles.drawingCanvas}
-      width={640}
-      height={480}
+      style={{ width: `${width}px`, height: `${height}px` }}
       ref={canvasEl}
       onMouseDown={mouseDown}
       onMouseUp={mouseUp}
