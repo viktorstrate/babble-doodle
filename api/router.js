@@ -7,15 +7,10 @@ function makeApiRouter(io) {
   const router = express.Router()
 
   router.post('/new-game', (req, res) => {
-    const { socketSession } = req.body
-    console.log(req.body)
+    const game = game.newGame()
+    game.setupGameSocket(io, game)
 
-    if (socketSession == null) {
-      res.send({ ok: false, message: 'no socket session provided' })
-      return
-    }
-
-    res.send({ ok: true, lobby: game.makeLobby() })
+    res.send({ ok: true, game })
   })
 
   router.all('*', (req, res) => {

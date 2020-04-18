@@ -1,4 +1,4 @@
-const lobbies = []
+const current_games = []
 
 const setupSocket = io => {
   io.on('connection', socket => {
@@ -18,15 +18,22 @@ const makeid = () => {
   return result
 }
 
-const makeLobby = () => {
-  const newLobby = {
+const setupGameSocket = (io, game) => {
+  const room = io.of(`/${game.id}`)
+  room.on('connection', () => {
+    console.log('a user joined game', game.id)
+  })
+}
+
+const newGame = () => {
+  const game = {
     id: makeid(),
   }
 
-  return newLobby
+  return game
 }
 
 module.exports = {
   setupSocket,
-  makeLobby,
+  newGame,
 }

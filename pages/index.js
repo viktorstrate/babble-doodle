@@ -1,15 +1,13 @@
 import Layout from '../components/Layout'
-import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 
-const newGame = async event => {
+const newGame = router => async event => {
   let res = await fetch('/api/new-game', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      socketSession: '1234',
-    }),
+    body: JSON.stringify({}),
   })
 
   res = await res.json()
@@ -19,21 +17,18 @@ const newGame = async event => {
     return
   }
 
-  const { lobby } = res
-  location.href = `/game/${lobby.id}`
+  const { game } = res
+  router.push(`/game/${game.id}`)
 }
 
 export default function Home() {
-  useEffect(() => {
-    const socket = window.io()
-    console.log(socket)
-  }, [])
+  const router = useRouter()
 
   return (
     <Layout>
       <h1>Babble Doodle</h1>
       <p>A social party game about drawing and explaining</p>
-      <button onClick={newGame}>New game</button>
+      <button onClick={newGame(router)}>New game</button>
     </Layout>
   )
 }
