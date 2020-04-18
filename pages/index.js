@@ -1,6 +1,27 @@
 import Layout from '../components/Layout'
-import DrawingCanvas from '../components/DrawingCanvas/DrawingCanvas'
 import { useEffect } from 'react'
+
+const newGame = async event => {
+  let res = await fetch('/api/new-game', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      socketSession: '1234',
+    }),
+  })
+
+  res = await res.json()
+
+  if (!res.ok) {
+    alert('Could not start game', res.message)
+    return
+  }
+
+  const { lobby } = res
+  location.href = `/game/${lobby.id}`
+}
 
 export default function Home() {
   useEffect(() => {
@@ -12,10 +33,7 @@ export default function Home() {
     <Layout>
       <h1>Babble Doodle</h1>
       <p>A social party game about drawing and explaining</p>
-      <h2>Draw you character</h2>
-      <DrawingCanvas width="200" height="200" />
-      <br />
-      <button>New game</button>
+      <button onClick={newGame}>New game</button>
     </Layout>
   )
 }
