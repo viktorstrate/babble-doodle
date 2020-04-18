@@ -42,11 +42,11 @@ const redraw = ctx => ({ state }) => {
       const point = points[i]
 
       if (i == 0) {
-        ctx.moveTo(point.x, point.y)
+        ctx.moveTo(point.x * CANVAS_SCALE, point.y * CANVAS_SCALE)
         continue
       }
 
-      ctx.lineTo(point.x, point.y)
+      ctx.lineTo(point.x * CANVAS_SCALE, point.y * CANVAS_SCALE)
     }
     ctx.stroke()
   }
@@ -86,6 +86,7 @@ const defaultState = {
 }
 
 let context = null
+const CANVAS_SCALE = 2
 const setupContext = canvas => {
   console.log('setup canvas', canvas)
   if (canvas == null) {
@@ -93,10 +94,13 @@ const setupContext = canvas => {
     return
   }
 
+  canvas.width = 640 * CANVAS_SCALE
+  canvas.height = 480 * CANVAS_SCALE
+
   context = canvas.getContext('2d')
   context.lineJoin = 'round'
   context.lineCap = 'round'
-  context.lineWidth = 2
+  context.lineWidth = 2 * CANVAS_SCALE
 }
 
 export default function DrawingCanvas() {
