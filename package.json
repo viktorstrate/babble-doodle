@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "node server.js",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "test": "eslint \"**/*.js\""
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -18,6 +19,7 @@
   },
   "devDependencies": {
     "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.19.0",
     "prettier": "^2.0.4"
   },
   "prettier": {
@@ -28,6 +30,13 @@
     "arrowParens": "avoid"
   },
   "eslintConfig": {
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "plugins": [
+      "react"
+    ],
     "env": {
       "browser": true,
       "node": true
@@ -38,6 +47,11 @@
       "ecmaFeatures": {
         "jsx": true
       }
+    },
+    "rules": {
+      "no-unused-vars": "warn",
+      "react/react-in-jsx-scope": "off",
+      "react/prop-types": "off"
     }
   }
 }

@@ -1,36 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react'
 import styles from './DrawingCanvas.module.sass'
+import { canvasMouseDown, canvasMouseUp, canvasMouseMove } from './mouseSupport'
 import {
   canvasTouchStart,
   canvasTouchEnd,
   canvasTouchMove,
 } from './touchSupport'
-
-const canvasMouseDown = canvasEl => stateObj => event => {
-  if (event.target == canvasEl.current) event.preventDefault()
-
-  startDrawing(stateObj)
-}
-
-const canvasMouseUp = canvasEl => stateObj => event => {
-  if (event.target == canvasEl.current) event.preventDefault()
-
-  endDrawing(stateObj)
-}
-
-const canvasMouseMove = canvasEl => ({ state, setState }) => event => {
-  if (!state.isDrawing) return
-  if (event.target == canvasEl.current) event.preventDefault()
-
-  const { offsetX, offsetY } = event.nativeEvent
-
-  const point = {
-    x: offsetX,
-    y: offsetY,
-  }
-
-  drawMove({ state, setState }, point)
-}
 
 const redraw = ctx => ({ state }) => {
   const { lines } = state
