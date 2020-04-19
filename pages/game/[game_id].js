@@ -11,6 +11,9 @@ export default function Game() {
   const { game_id } = router.query
 
   useEffect(() => {
+    if (game_id == null) return
+
+    console.log('Connecting to', `/${game_id}`)
     const socket = window.io(`/${game_id}`)
 
     socket.on('connect', () => {
@@ -18,7 +21,11 @@ export default function Game() {
     })
 
     registerGame(socket)
-  }, [])
+
+    return () => {
+      socket.close()
+    }
+  }, [router])
 
   return (
     <Layout>

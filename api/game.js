@@ -1,13 +1,12 @@
 const current_games = []
 
 const setupSocket = io => {
-  io.on('connection', socket => {
-    console.log('user connected')
-
-    socket.on('disconnect', () => {
-      console.log('user disconnected')
-    })
-  })
+  // io.on('connection', socket => {
+  //   console.log('user connected')
+  //   socket.on('disconnect', () => {
+  //     console.log('user disconnected')
+  //   })
+  // })
 }
 
 const makeid = () => {
@@ -19,9 +18,11 @@ const makeid = () => {
 }
 
 const setupGameSocket = (io, game) => {
+  console.log('Setting up socket room', `/${game.id}`)
   const room = io.of(`/${game.id}`)
-  room.on('connection', () => {
+  room.on('connection', client => {
     console.log('a user joined game', game.id)
+    client.on('disconnect', () => console.log('client disconnected from room'))
   })
 }
 
@@ -35,5 +36,6 @@ const newGame = () => {
 
 module.exports = {
   setupSocket,
+  setupGameSocket,
   newGame,
 }
