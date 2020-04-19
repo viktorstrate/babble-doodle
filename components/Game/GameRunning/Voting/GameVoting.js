@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import DrawingCanvas, {
   initialState as initialCanvasState,
 } from '../../../DrawingCanvas/DrawingCanvas'

@@ -21,12 +21,22 @@ export default (socket, { setGameState }) => {
     }))
   })
 
-  socket.on('vote-received', ({ id }) => {
+  socket.on('vote-acknowledged', ({ id }) => {
     setGameState(gameState => ({
       ...gameState,
       round: {
         ...gameState.round,
         voted: id,
+      },
+    }))
+  })
+
+  socket.on('votes', votes => {
+    setGameState(gameState => ({
+      ...gameState,
+      round: {
+        votes,
+        state: 'scores',
       },
     }))
   })

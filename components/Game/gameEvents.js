@@ -1,8 +1,4 @@
-export default ({
-  socket,
-  setSocketConnected,
-  gameStateObj: { gameState, setGameState },
-}) => {
+export default ({ socket, setSocketConnected, setGameState }) => {
   socket.on('connect', () => {
     console.log('connected')
     setSocketConnected(true)
@@ -10,18 +6,18 @@ export default ({
 
   socket.on('game-details', ({ players, state }) => {
     console.log('connected players:', players)
-    setGameState({
+    setGameState(gameState => ({
       ...gameState,
       players,
       state,
-    })
+    }))
   })
 
   socket.on('game-started', () => {
     console.log('game started')
-    setGameState({
+    setGameState(gameState => ({
       ...gameState,
       state: 'running',
-    })
+    }))
   })
 }

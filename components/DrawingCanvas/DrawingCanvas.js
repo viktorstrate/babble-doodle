@@ -10,6 +10,7 @@ import styled from 'styled-components'
 const StyledCanvas = styled.canvas`
   border: 2px solid #ccc;
   touch-action: none;
+  background-color: white;
 `
 
 const redraw = ctx => ({ state }) => {
@@ -93,6 +94,7 @@ const setupContext = (canvas, { width, height }, setContext) => {
 }
 
 export default function DrawingCanvas({
+  className,
   width = 100,
   height = 100,
   setImageState: setState = () => {},
@@ -138,7 +140,7 @@ export default function DrawingCanvas({
 
   return (
     <StyledCanvas
-      className={'drawing-canvas'}
+      className={`drawing-canvas ${className}`}
       style={{ width: `${width}px`, height: `${height}px` }}
       ref={canvasEl}
       onMouseDown={mouseDown}

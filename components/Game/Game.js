@@ -19,6 +19,8 @@ export default function Game() {
   })
   const gameStateObj = { gameState, setGameState }
 
+  console.log('gameState', gameState)
+
   useEffect(() => {
     if (game_id == null) return
 
@@ -37,7 +39,7 @@ export default function Game() {
     gameEvents({
       socket: s,
       setSocketConnected,
-      gameStateObj,
+      setGameState,
     })
 
     runningGameEvents(s, gameStateObj)

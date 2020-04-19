@@ -90,13 +90,34 @@ const newRound = async (room, gameState) => {
         player.client.once('vote', ({ id }) => {
           done(id)
 
-          player.client.emit('vote-received', { id })
+          player.client.emit('vote-acknowledged', { id })
         })
       })
   )
 
   const playerVotes = await Promise.all(playerVotePromises)
   console.log('All votes are in', playerVotes)
+
+  // Score
+  const votes = playerVotes.reduce((result, vote) => {
+    if (result[vote] == null) {
+      result[vote] = 1
+    } else {
+      result[vote] += 1
+    }
+
+    return result
+  }, {})
+
+  const scoreResult = Object.keys(votes).map(id => ({
+    id,
+    image: gameState.round.users[id].image,
+    votes: votes[id],
+  }))
+
+  gameState.players.forEach(player => {
+    player.client.emit('votes', scoreResult)
+  })
 }
 
 const wait = ms =>

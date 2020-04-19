@@ -1,5 +1,7 @@
+import React from 'react'
 import GameDrawing from './Drawing/GameDrawing'
 import GameVoting from './Voting/GameVoting'
+import GameScores from './Scores/GameScores'
 
 export default function GameRunning({ socket, gameStateObj }) {
   const { gameState } = gameStateObj
@@ -11,6 +13,9 @@ export default function GameRunning({ socket, gameStateObj }) {
       break
     case 'voting':
       roundStateEl = <GameVoting socket={socket} gameStateObj={gameStateObj} />
+      break
+    case 'scores':
+      roundStateEl = <GameScores socket={socket} gameStateObj={gameStateObj} />
       break
     default:
       roundStateEl = <div>Invalid game round state...</div>
