@@ -1,6 +1,6 @@
 import DrawingCanvas, {
   initialState as initialCanvasState,
-} from '../../DrawingCanvas/DrawingCanvas'
+} from '../../../DrawingCanvas/DrawingCanvas'
 import { useState, useEffect } from 'react'
 
 export default function GameRoleConveyor({ socket, gameStateObj }) {

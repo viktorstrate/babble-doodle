@@ -49,7 +49,7 @@ const setupGame = (io, game) => {
 
 const userJoin = client =>
   new Promise(resolve => {
-    client.on('join-game', user => {
+    client.once('join-game', user => {
       resolve({
         user: {
           ...user,

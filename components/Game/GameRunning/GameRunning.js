@@ -1,32 +1,20 @@
-import { localPlayerRole } from '../helpers'
-import GameRolePainter from './GameRolePainter'
-import GameRoleConveyor from './GameRoleConveyor'
-import GameRoleParticipant from './GameRoleParticipant'
+import GameDrawing from './Drawing/GameDrawing'
+import GameVoting from './Voting/GameVoting'
 
 export default function GameRunning({ socket, gameStateObj }) {
   const { gameState } = gameStateObj
 
-  let roleEl = null
-  switch (localPlayerRole(socket, gameState)) {
-    case 'painter':
-      roleEl = <GameRolePainter socket={socket} gameStateObj={gameStateObj} />
+  let roundStateEl = null
+  switch (gameState.round && gameState.round.state) {
+    case 'drawing':
+      roundStateEl = <GameDrawing socket={socket} gameStateObj={gameStateObj} />
       break
-    case 'conveyor':
-      roleEl = <GameRoleConveyor socket={socket} gameStateObj={gameStateObj} />
-      break
-    case 'participant':
-      roleEl = (
-        <GameRoleParticipant socket={socket} gameStateObj={gameStateObj} />
-      )
+    case 'voting':
+      roundStateEl = <GameVoting socket={socket} gameStateObj={gameStateObj} />
       break
     default:
-      roleEl = <div>Your role has not been assigned yet</div>
+      roundStateEl = <div>Invalid game round state...</div>
   }
 
-  return (
-    <div>
-      <h2>Game started</h2>
-      {roleEl}
-    </div>
-  )
+  return roundStateEl
 }

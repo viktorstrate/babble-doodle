@@ -1,6 +1,6 @@
 import DrawingCanvas, {
   initialState as initialCanvasState,
-} from '../../DrawingCanvas/DrawingCanvas'
+} from '../../../DrawingCanvas/DrawingCanvas'
 import { useState, useRef } from 'react'
 import throttle from 'lodash/throttle'
 
@@ -10,7 +10,7 @@ export default function GameRolePainter({ socket, gameStateObj }) {
   const sendPaintEvent = useRef(
     throttle(newImageState => {
       console.log('Sending paint event')
-      socket.emit('painter-paint', {
+      socket.emit('participant-paint', {
         image: newImageState.image,
       })
     }, 100)
@@ -23,8 +23,8 @@ export default function GameRolePainter({ socket, gameStateObj }) {
 
   return (
     <div>
-      <h2>You are the painter</h2>
-      <p>Draw your finest masterpice</p>
+      <h2>You are a participant</h2>
+      <p>Draw what the conveyor tells you to draw</p>
       <DrawingCanvas
         setImageState={onImageUpdate}
         imageState={imageState}
