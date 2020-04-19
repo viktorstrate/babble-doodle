@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import styles from './DrawingCanvas.module.sass'
 import { canvasMouseDown, canvasMouseUp, canvasMouseMove } from './mouseSupport'
 import {
@@ -70,35 +70,44 @@ export const initialState = {
   },
 }
 
-let context = null
 const CANVAS_SCALE = 2
-const setupContext = (canvas, { width, height }) => {
+const setupContext = (canvas, { width, height }, setContext) => {
   console.log('setup canvas', canvas)
   if (canvas == null) {
-    context = null
     return
   }
 
   canvas.width = width * CANVAS_SCALE
   canvas.height = height * CANVAS_SCALE
 
-  context = canvas.getContext('2d')
+  const context = canvas.getContext('2d')
   context.lineJoin = 'round'
   context.lineCap = 'round'
   context.lineWidth = 2 * CANVAS_SCALE
+  setContext(context)
 }
 
 export default function DrawingCanvas({
   width = 100,
   height = 100,
-  setImageState: setState,
+  setImageState: setState = () => {},
   imageState: state,
 }) {
   const canvasEl = useRef(null)
+  const [context, setContext] = useState(null)
   const stateObj = { state, setState }
 
   useEffect(() => {
-    setupContext(canvasEl.current, { width, height })
+    console.log('Setup canvas', canvasEl, state)
+
+    const canvasWidth = state.image.width || width
+    const canvasHeight = state.image.height || height
+
+    setupContext(
+      canvasEl.current,
+      { width: canvasWidth, height: canvasHeight },
+      setContext
+    )
   }, [canvasEl])
 
   useEffect(() => {
@@ -124,8 +133,7 @@ export default function DrawingCanvas({
 
   return (
     <canvas
-      id="drawing-canvas"
-      className={styles.drawingCanvas}
+      className={`${styles.drawingCanvas} drawing-canvas`}
       style={{ width: `${width}px`, height: `${height}px` }}
       ref={canvasEl}
       onMouseDown={mouseDown}

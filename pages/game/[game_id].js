@@ -12,7 +12,9 @@ const joinGame = (socket, image) => {
 export default function Game() {
   const router = useRouter()
   const [socket, setSocket] = useState(null)
+  const [socketConnected, setSocketConnected] = useState(false)
   const [imageState, setImageState] = useState(initialImageState)
+  const [connectedPlayers, setConnectedPlayers] = useState([])
 
   const { game_id } = router.query
 
@@ -24,6 +26,12 @@ export default function Game() {
 
     s.on('connect', () => {
       console.log('connected')
+      setSocketConnected(true)
+    })
+
+    s.on('player-details', players => {
+      console.log('connected players:', players)
+      setConnectedPlayers(players)
     })
 
     setSocket(s)
@@ -32,6 +40,10 @@ export default function Game() {
       s.close()
     }
   }, [router])
+
+  if (!socketConnected) {
+    return <h1>Connecting to room</h1>
+  }
 
   return (
     <Layout>
@@ -51,6 +63,19 @@ export default function Game() {
       >
         Join game
       </button>
+      <div>
+        <h2>Connected players</h2>
+        {connectedPlayers.map(player => (
+          <div key={player.id}>
+            <p>Player: {player.id}</p>
+            <DrawingCanvas
+              width="150"
+              height="150"
+              imageState={{ image: player.image }}
+            />
+          </div>
+        ))}
+      </div>
     </Layout>
   )
 }
