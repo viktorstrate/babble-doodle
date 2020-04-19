@@ -158,6 +158,14 @@ const distributeRoles = ({ players }) => {
 
   const userIds = players.map(x => x.user.id)
 
+  // Shuffle user ids
+  for (const i in userIds) {
+    const j = Math.floor(Math.random() * userIds.length)
+    const tmp = userIds[i]
+    userIds[i] = userIds[j]
+    userIds[j] = tmp
+  }
+
   users[userIds.pop()] = { role: PlayerRole.PAINTER }
   users[userIds.pop()] = { role: PlayerRole.CONVEYOR }
 
