@@ -20,6 +20,14 @@ const setupRunningGame = (room, gameState) => {
     const conveyorPlayer = findConveyorPlayer(gameState)
     conveyorPlayer.client.emit('painter-paint', { image })
   })
+
+  const participatingPlayers = findParticipatingPlayers(gameState)
+  participatingPlayers.forEach(participant => {
+    participant.client.on('participant-paint', ({ image }) => {
+      console.log('Updating participant painting')
+      participant.image = image
+    })
+  })
 }
 
 const findConveyorPlayer = gameState =>
@@ -30,6 +38,12 @@ const findConveyorPlayer = gameState =>
 const findPainterPlayer = gameState =>
   gameState.players.find(
     player => gameState.round.users[player.user.id].role == PlayerRole.PAINTER
+  )
+
+const findParticipatingPlayers = gameState =>
+  gameState.players.filter(
+    player =>
+      gameState.round.users[player.user.id].role == PlayerRole.PARTICIPANT
   )
 
 const newRound = (room, gameState) => {

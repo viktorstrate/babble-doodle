@@ -24,6 +24,7 @@ export default function GameRolePainter({ socket, gameStateObj }) {
   return (
     <div>
       <h2>You are the painter</h2>
+      <p>Draw your finest masterpice</p>
       <DrawingCanvas
         setImageState={onImageUpdate}
         imageState={imageState}

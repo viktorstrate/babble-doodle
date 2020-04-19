@@ -22,6 +22,7 @@ export default function GameRoleConveyor({ socket, gameStateObj }) {
   return (
     <div>
       <h2>You are the conveyor</h2>
+      <p>Tell the other players what is being drawn</p>
       {canvas}
     </div>
   )
