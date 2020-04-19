@@ -67,7 +67,7 @@ const emitGameDetails = (socket, gameState) => {
   })
 }
 
-const startGame = (room, gameState) => {
+const startGame = async (room, gameState) => {
   if (gameState.state != 'lobby') {
     console.log('Game cannot be started', gameState.gameId)
     return
@@ -78,7 +78,7 @@ const startGame = (room, gameState) => {
     return
   }
 
-  runningGame.setupRunningGame(room, gameState)
+  await runningGame.setupRunningGame(room, gameState)
 }
 
 module.exports = {

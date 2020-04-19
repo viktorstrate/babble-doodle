@@ -4,12 +4,15 @@ const PlayerRole = {
   PARTICIPANT: 'participant',
 }
 
-const setupRunningGame = (room, gameState) => {
+const setupRunningGame = async (room, gameState) => {
   console.log('Starting game', gameState.gameId)
   gameState.state = 'running'
   room.emit('game-started')
 
-  newRound(room, gameState)
+  let playAnotherRound = true
+  while (playAnotherRound) {
+    playAnotherRound = await newRound(room, gameState)
+  }
 }
 
 const findConveyorPlayer = gameState =>
@@ -35,8 +38,13 @@ const newRound = async (room, gameState) => {
     state: 'drawing',
   }
 
+  const endTime = Date.now() + 10 * 1000
+
   console.log('Starting new round', JSON.stringify(gameState.round))
-  room.emit('new-round', gameState.round)
+  room.emit('new-round', {
+    ...gameState.round,
+    endTime,
+  })
 
   // Round events
   console.log('listening to painter-paint event')
@@ -58,7 +66,7 @@ const newRound = async (room, gameState) => {
 
   console.log('Round in progress')
 
-  await wait(1000 * 8)
+  await wait(endTime - Date.now())
 
   console.log('Round finished')
 
@@ -118,6 +126,26 @@ const newRound = async (room, gameState) => {
   gameState.players.forEach(player => {
     player.client.emit('votes', scoreResult)
   })
+
+  // Wait for all players to vote new round
+
+  const playersVotedNewRound = gameState.players.map(
+    player =>
+      new Promise(done => {
+        player.client.once('new-round', () => {
+          done()
+        })
+      })
+  )
+
+  console.log('Waiting for players to vote for a new round')
+
+  await Promise.all(playersVotedNewRound)
+
+  gameState.round = {}
+
+  console.log('All players voted to start a new round')
+  return true
 }
 
 const wait = ms =>

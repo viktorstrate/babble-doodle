@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PaintingWithAvatar from '../../../PaintingWithAvatar'
+
+const newRound = socket => () => {
+  socket.emit('new-round')
+}
 
 export default function GameScores({ socket, gameStateObj }) {
   const { gameState } = gameStateObj
+
+  const [votedNewRound, setVotedNewRound] = useState(false)
 
   const votes = gameState.round.votes
 
@@ -23,6 +29,15 @@ export default function GameScores({ socket, gameStateObj }) {
     <div>
       <h1>Scores</h1>
       {voteElms}
+      <button
+        disabled={votedNewRound}
+        onClick={() => {
+          newRound(socket)()
+          setVotedNewRound(true)
+        }}
+      >
+        New round
+      </button>
     </div>
   )
 }

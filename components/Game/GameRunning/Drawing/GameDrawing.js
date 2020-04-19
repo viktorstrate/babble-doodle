@@ -3,6 +3,7 @@ import { localPlayerRole } from '../../helpers'
 import GameRolePainter from './GameRolePainter'
 import GameRoleConveyor from './GameRoleConveyor'
 import GameRoleParticipant from './GameRoleParticipant'
+import CountdownTimer from './CountdownTimer'
 
 export default function GameDrawing({ socket, gameStateObj }) {
   const { gameState } = gameStateObj
@@ -24,5 +25,10 @@ export default function GameDrawing({ socket, gameStateObj }) {
       roleEl = <div>Your role has not been assigned yet</div>
   }
 
-  return roleEl
+  return (
+    <div>
+      <CountdownTimer endTime={gameState.round.endTime} />
+      {roleEl}
+    </div>
+  )
 }
