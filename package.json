@@ -7,7 +7,9 @@
     "dev": "nodemon --watch api server.js",
     "build": "next build",
     "start": "next start",
-    "test": "eslint \"**/*.js\""
+    "test": "eslint \"**/*.js\"",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "dependencies": {
     "express": "^4.17.1",
@@ -19,6 +21,12 @@
     "socket.io": "^2.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@storybook/addon-actions": "^5.3.18",
+    "@storybook/addon-links": "^5.3.18",
+    "@storybook/addons": "^5.3.18",
+    "@storybook/react": "^5.3.18",
+    "babel-loader": "^8.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0",
     "nodemon": "^2.0.3",

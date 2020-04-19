@@ -1,3 +1,5 @@
+import React from 'react'
+
 export default function GameVoting({ socket, gameStateObj }) {
   const { gameState } = gameStateObj
 
