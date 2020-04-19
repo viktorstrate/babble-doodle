@@ -1,3 +1,4 @@
+import React from 'react'
 import JoinGame from './JoinGame'
 import ConnectedPlayers from './ConnectedPlayers'
 import { localPlayer } from '../helpers'

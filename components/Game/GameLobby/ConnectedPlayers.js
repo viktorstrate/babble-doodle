@@ -1,3 +1,4 @@
+import React from 'react'
 import DrawingCanvas from '../../DrawingCanvas/DrawingCanvas'
 
 export default function ConnectedPlayers({ players }) {

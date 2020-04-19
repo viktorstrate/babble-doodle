@@ -1,3 +1,4 @@
+import React from 'react'
 import DrawingCanvas, {
   initialState as initialImageState,
 } from '../../DrawingCanvas/DrawingCanvas'
@@ -8,7 +9,6 @@ const joinGame = (socket, image) => {
 }
 
 export default function JoinGame({ socket, gameStateObj }) {
-  const { gameState, setGameState } = gameStateObj
   const [imageState, setImageState] = useState(initialImageState)
 
   return (

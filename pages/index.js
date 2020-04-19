@@ -1,7 +1,8 @@
+import React from 'react'
 import Layout from '../components/Layout'
 import { useRouter } from 'next/router'
 
-const newGame = router => async event => {
+const newGame = router => async () => {
   let res = await fetch('/api/new-game', {
     method: 'POST',
     headers: {
