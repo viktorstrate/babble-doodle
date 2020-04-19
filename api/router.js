@@ -1,16 +1,14 @@
 const express = require('express')
-const game = require('./game')
+const gameManager = require('./game/gameManager')
 
 function makeApiRouter(io) {
-  game.setupSocket(io)
-
   const router = express.Router()
 
   router.post('/new-game', (req, res) => {
-    const room = game.newGame()
-    game.setupGameSocket(io, room)
+    const game = gameManager.newGame()
+    gameManager.setupGameSocket(io, game)
 
-    res.send({ ok: true, game: room })
+    res.send({ ok: true, game })
   })
 
   router.all('*', (req, res) => {

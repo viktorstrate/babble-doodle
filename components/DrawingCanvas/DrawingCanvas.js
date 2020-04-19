@@ -8,32 +8,35 @@ import {
 } from './touchSupport'
 
 const redraw = ctx => ({ state }) => {
-  const { lines } = state
+  const { lines } = state.image
 
-  for (const points of lines) {
+  for (const line of lines) {
     ctx.beginPath()
 
-    for (const i in points) {
-      const point = points[i]
+    for (const i in line.path) {
+      const [x, y] = line.path[i]
 
       if (i == 0) {
-        ctx.moveTo(point.x * CANVAS_SCALE, point.y * CANVAS_SCALE)
+        ctx.moveTo(x * CANVAS_SCALE, y * CANVAS_SCALE)
         continue
       }
 
-      ctx.lineTo(point.x * CANVAS_SCALE, point.y * CANVAS_SCALE)
+      ctx.lineTo(x * CANVAS_SCALE, y * CANVAS_SCALE)
     }
     ctx.stroke()
   }
 }
 
 export const startDrawing = ({ state, setState }) => {
-  const lines = [[], ...state.lines]
+  const lines = [{ path: [] }, ...state.image.lines]
 
   setState({
     ...state,
     isDrawing: true,
-    lines,
+    image: {
+      ...state.image,
+      lines,
+    },
   })
 }
 
@@ -45,19 +48,26 @@ export const endDrawing = ({ state, setState }) => {
 }
 
 export const drawMove = ({ state, setState }, point) => {
-  const lines = state.lines
-  lines[0] = [point, ...lines[0]]
+  const lines = state.image.lines
+  lines[0].path = [[point.x, point.y], ...lines[0].path]
 
   setState({
     ...state,
-    lines,
+    image: {
+      ...state.image,
+      lines,
+    },
   })
 }
 
-const defaultState = {
+export const initialState = {
   isDrawing: false,
   prevPos: null,
-  lines: [],
+  image: {
+    lines: [],
+    width: 0,
+    height: 0,
+  },
 }
 
 let context = null
@@ -78,14 +88,29 @@ const setupContext = (canvas, { width, height }) => {
   context.lineWidth = 2 * CANVAS_SCALE
 }
 
-export default function DrawingCanvas({ width, height }) {
+export default function DrawingCanvas({
+  width = 100,
+  height = 100,
+  setImageState: setState,
+  imageState: state,
+}) {
   const canvasEl = useRef(null)
-  const [state, setState] = useState(defaultState)
   const stateObj = { state, setState }
 
   useEffect(() => {
     setupContext(canvasEl.current, { width, height })
   }, [canvasEl])
+
+  useEffect(() => {
+    setState({
+      ...initialState,
+      image: {
+        ...initialState.image,
+        width,
+        height,
+      },
+    })
+  }, [])
 
   if (canvasEl.current) redraw(context)(stateObj)
 
