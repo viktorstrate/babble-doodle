@@ -7,7 +7,8 @@ const joinGame = (socket, image) => {
   socket.emit('join-game', { image })
 }
 
-export default function JoinGame({ socket }) {
+export default function JoinGame({ socket, gameStateObj }) {
+  const { gameState, setGameState } = gameStateObj
   const [imageState, setImageState] = useState(initialImageState)
 
   return (
@@ -22,7 +23,7 @@ export default function JoinGame({ socket }) {
       <br />
       <button
         disabled={socket == null || imageState.image.lines.length == 0}
-        onClick={() => joinGame(socket, imageState.image)}
+        onClick={() => joinGame(socket, imageState.image, gameStateObj)}
       >
         Join game
       </button>

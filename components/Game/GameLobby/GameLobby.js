@@ -1,11 +1,30 @@
 import JoinGame from './JoinGame'
 import ConnectedPlayers from './ConnectedPlayers'
+import { localPlayer } from './helpers'
 
-export default function GameLobby({ socket, connectedPlayers }) {
+const onStartGame = socket => () => {
+  socket.emit('start-game')
+}
+
+export default function GameLobby({ socket, gameStateObj }) {
+  const { gameState } = gameStateObj
+
+  let joinGame = null
+  if (localPlayer(socket, gameState) == null) {
+    joinGame = <JoinGame socket={socket} gameStateObj={gameStateObj} />
+  }
+
+  const startDisabled = joinGame != null
+
   return (
     <div>
-      <JoinGame socket={socket} />
-      <ConnectedPlayers players={connectedPlayers} />
+      {joinGame}
+      <ConnectedPlayers players={gameState.players} />
+      <div>
+        <button disabled={startDisabled} onClick={onStartGame(socket)}>
+          Start the game
+        </button>
+      </div>
     </div>
   )
 }

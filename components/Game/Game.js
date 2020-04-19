@@ -2,32 +2,39 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
 import GameLobby from './GameLobby/GameLobby'
+import gameEvents from './gameEvents'
+import GameRunning from './GameRunning/GameRunning'
 
 export default function Game() {
   const router = useRouter()
 
   const [socket, setSocket] = useState(null)
-  const socketObj = { socket, setSocket }
-
   const [socketConnected, setSocketConnected] = useState(false)
-  const [connectedPlayers, setConnectedPlayers] = useState([])
 
   const { game_id } = router.query
+  const [gameState, setGameState] = useState({
+    players: [],
+    gameId: null,
+  })
+  const gameStateObj = { gameState, setGameState }
 
   useEffect(() => {
     if (game_id == null) return
 
+    if (game_id != gameState.gameId) {
+      setGameState({
+        ...gameState,
+        gameId: game_id,
+      })
+    }
+
     console.log('Connecting to', `/${game_id}`)
     const s = window.io(`/${game_id}`)
 
-    s.on('connect', () => {
-      console.log('connected')
-      setSocketConnected(true)
-    })
-
-    s.on('player-details', players => {
-      console.log('connected players:', players)
-      setConnectedPlayers(players)
+    gameEvents({
+      socket: s,
+      setSocketConnected,
+      gameStateObj,
     })
 
     setSocket(s)
@@ -41,11 +48,24 @@ export default function Game() {
     return <h1>Connecting to room</h1>
   }
 
+  let stateElm = null
+  switch (gameState.state) {
+    case 'lobby':
+      stateElm = <GameLobby socket={socket} gameStateObj={gameStateObj} />
+      break
+    case 'running':
+      stateElm = <GameRunning socket={socket} gameStateObj={gameStateObj} />
+      break
+    default:
+      stateElm = <p>Game is in an unknown state...</p>
+  }
+
   return (
     <Layout>
       <h1>Babble Doodle Game</h1>
-      <p>Welcome to game: {game_id}</p>
-      <GameLobby socket={socket} connectedPlayers={connectedPlayers} />
+      <p>Welcome to game: {gameState.gameId}</p>
+      <p>Your id {socket.id}</p>
+      {stateElm}
     </Layout>
   )
 }

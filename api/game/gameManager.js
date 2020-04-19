@@ -9,7 +9,7 @@ const makeid = () => {
 }
 
 const setupGameSocket = (io, game) => {
-  singleGame.startGame(io, game)
+  singleGame.setupGame(io, game)
 }
 
 const newGame = () => {
