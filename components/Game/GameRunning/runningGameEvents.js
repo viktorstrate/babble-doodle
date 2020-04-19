@@ -1,10 +1,10 @@
-export default (socket, { setGameState, gameState }) => {
+export default (socket, { setGameState }) => {
   socket.on('new-round', round => {
     console.log('New round', round)
 
-    setGameState({
+    setGameState(gameState => ({
       ...gameState,
       round,
-    })
+    }))
   })
 }

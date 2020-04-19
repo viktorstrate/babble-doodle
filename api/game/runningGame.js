@@ -10,11 +10,31 @@ const setupRunningGame = (room, gameState) => {
   room.emit('game-started')
 
   newRound(room, gameState)
+
+  console.log('listening to painter-paint event')
+
+  const painterPlayer = findPainterPlayer(gameState)
+  painterPlayer.client.on('painter-paint', ({ image }) => {
+    painterPlayer.image = image
+
+    const conveyorPlayer = findConveyorPlayer(gameState)
+    conveyorPlayer.client.emit('painter-paint', { image })
+  })
 }
+
+const findConveyorPlayer = gameState =>
+  gameState.players.find(
+    player => gameState.round.users[player.user.id].role == PlayerRole.CONVEYOR
+  )
+
+const findPainterPlayer = gameState =>
+  gameState.players.find(
+    player => gameState.round.users[player.user.id].role == PlayerRole.PAINTER
+  )
 
 const newRound = (room, gameState) => {
   gameState.round = {
-    roles: distributeRoles(gameState),
+    users: distributeRoles(gameState),
   }
 
   console.log('Starting new round', JSON.stringify(gameState.round))
@@ -22,16 +42,17 @@ const newRound = (room, gameState) => {
 }
 
 const distributeRoles = ({ players }) => {
-  const roles = {}
+  const users = {}
 
   const userIds = players.map(x => x.user.id)
 
-  roles[userIds.pop()] = PlayerRole.PAINTER
-  roles[userIds.pop()] = PlayerRole.CONVEYOR
+  users[userIds.pop()] = { role: PlayerRole.PAINTER }
+  users[userIds.pop()] = { role: PlayerRole.CONVEYOR }
 
-  while (userIds.length > 0) roles[userIds.pop()] = PlayerRole.PARTICIPANT
+  while (userIds.length > 0)
+    users[userIds.pop()] = { role: PlayerRole.PARTICIPANT }
 
-  return roles
+  return users
 }
 
 module.exports = {

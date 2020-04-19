@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import Layout from '../../components/Layout'
 import GameLobby from './GameLobby/GameLobby'
 import gameEvents from './gameEvents'
+import runningGameEvents from './GameRunning/runningGameEvents'
 import GameRunning from './GameRunning/GameRunning'
 
 export default function Game() {
@@ -31,11 +32,15 @@ export default function Game() {
     console.log('Connecting to', `/${game_id}`)
     const s = window.io(`/${game_id}`)
 
+    console.log(s)
+
     gameEvents({
       socket: s,
       setSocketConnected,
       gameStateObj,
     })
+
+    runningGameEvents(s, gameStateObj)
 
     setSocket(s)
 

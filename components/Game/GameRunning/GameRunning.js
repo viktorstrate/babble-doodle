@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-import runningGameEvents from './runningGameEvents'
 import { localPlayerRole } from '../helpers'
 import GameRolePainter from './GameRolePainter'
 import GameRoleConveyor from './GameRoleConveyor'
@@ -8,20 +6,18 @@ import GameRoleParticipant from './GameRoleParticipant'
 export default function GameRunning({ socket, gameStateObj }) {
   const { gameState } = gameStateObj
 
-  useEffect(() => {
-    runningGameEvents(socket, gameStateObj)
-  }, [])
-
   let roleEl = null
   switch (localPlayerRole(socket, gameState)) {
     case 'painter':
-      roleEl = <GameRolePainter />
+      roleEl = <GameRolePainter socket={socket} gameStateObj={gameStateObj} />
       break
     case 'conveyor':
-      roleEl = <GameRoleConveyor />
+      roleEl = <GameRoleConveyor socket={socket} gameStateObj={gameStateObj} />
       break
     case 'participant':
-      roleEl = <GameRoleParticipant />
+      roleEl = (
+        <GameRoleParticipant socket={socket} gameStateObj={gameStateObj} />
+      )
       break
     default:
       roleEl = <div>Your role has not been assigned yet</div>
