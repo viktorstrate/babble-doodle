@@ -1,3 +1,5 @@
+const runningGame = require('./runningGame')
+
 const initialGameState = gameId => ({
   players: [],
   state: 'lobby',
@@ -71,9 +73,12 @@ const startGame = (room, gameState) => {
     return
   }
 
-  console.log('Starting game', gameState.gameId)
-  gameState.state = 'running'
-  room.emit('game-started')
+  if (gameState.players < 3) {
+    console.log('Not enough players to start the game', gameState.gameId)
+    return
+  }
+
+  runningGame.setupRunningGame(room, gameState)
 }
 
 module.exports = {
