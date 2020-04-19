@@ -1,11 +1,16 @@
 import React, { useRef, useEffect, useState } from 'react'
-import styles from './DrawingCanvas.module.sass'
 import { canvasMouseDown, canvasMouseUp, canvasMouseMove } from './mouseSupport'
 import {
   canvasTouchStart,
   canvasTouchEnd,
   canvasTouchMove,
 } from './touchSupport'
+import styled from 'styled-components'
+
+const StyledCanvas = styled.canvas`
+  border: 2px solid #ccc;
+  touch-action: none;
+`
 
 const redraw = ctx => ({ state }) => {
   const { lines } = state.image
@@ -132,8 +137,8 @@ export default function DrawingCanvas({
   const touchMove = canvasTouchMove(canvasEl)(stateObj)
 
   return (
-    <canvas
-      className={`${styles.drawingCanvas} drawing-canvas`}
+    <StyledCanvas
+      className={'drawing-canvas'}
       style={{ width: `${width}px`, height: `${height}px` }}
       ref={canvasEl}
       onMouseDown={mouseDown}

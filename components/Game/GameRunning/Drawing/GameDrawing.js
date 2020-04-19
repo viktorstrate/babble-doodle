@@ -1,3 +1,4 @@
+import React from 'react'
 import { localPlayerRole } from '../../helpers'
 import GameRolePainter from './GameRolePainter'
 import GameRoleConveyor from './GameRoleConveyor'

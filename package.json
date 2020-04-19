@@ -18,7 +18,8 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "sass": "^1.26.3",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "styled-components": "^5.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
@@ -27,6 +28,7 @@
     "@storybook/addons": "^5.3.18",
     "@storybook/react": "^5.3.18",
     "babel-loader": "^8.1.0",
+    "babel-plugin-styled-components": "^1.10.7",
     "eslint": "^6.8.0",
     "eslint-plugin-react": "^7.19.0",
     "nodemon": "^2.0.3",
@@ -61,7 +63,7 @@
     },
     "rules": {
       "no-unused-vars": "warn",
-      "react/react-in-jsx-scope": "off",
+      "react/react-in-jsx-scope": "warn",
       "react/prop-types": "off"
     }
   }
