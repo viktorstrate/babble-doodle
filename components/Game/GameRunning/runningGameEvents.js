@@ -20,4 +20,14 @@ export default (socket, { setGameState }) => {
       },
     }))
   })
+
+  socket.on('vote-received', ({ id }) => {
+    setGameState(gameState => ({
+      ...gameState,
+      round: {
+        ...gameState.round,
+        voted: id,
+      },
+    }))
+  })
 }

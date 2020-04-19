@@ -62,14 +62,15 @@ const newRound = async (room, gameState) => {
 
   console.log('Round finished')
 
-  // Round teardown
+  // Drawing teardown
 
   gameState.state = 'voting'
 
   const result = {
-    players: gameState.players.map(
-      player => gameState.round.users[player.user.id]
-    ),
+    players: gameState.players.map(player => ({
+      ...gameState.round.users[player.user.id],
+      id: player.user.id,
+    })),
   }
 
   gameState.players.forEach(player =>
@@ -80,6 +81,22 @@ const newRound = async (room, gameState) => {
     result,
     state: 'voting',
   })
+
+  // Voting
+
+  const playerVotePromises = gameState.players.map(
+    player =>
+      new Promise(done => {
+        player.client.once('vote', ({ id }) => {
+          done(id)
+
+          player.client.emit('vote-received', { id })
+        })
+      })
+  )
+
+  const playerVotes = await Promise.all(playerVotePromises)
+  console.log('All votes are in', playerVotes)
 }
 
 const wait = ms =>

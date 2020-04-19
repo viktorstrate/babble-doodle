@@ -18,6 +18,7 @@ const exampleGameState = {
         players: [
           {
             role: 'participant',
+            id: '123sdf',
             image: {
               lines: [
                 {
@@ -64,10 +65,50 @@ const exampleGameState = {
             },
           },
           {
+            role: 'participant',
+            id: 'fdasef2',
+            image: {
+              lines: [
+                {
+                  path: [
+                    [356, 364],
+                    [356, 361],
+                    [356, 359],
+                    [356, 358],
+                    [325, 284],
+                    [314, 275],
+                    [304, 267],
+                    [299, 253],
+                    [341, 182],
+                    [352, 182],
+                    [364, 181],
+                    [389, 177],
+                    [404, 177],
+                    [411, 177],
+                  ],
+                },
+                {
+                  path: [
+                    [368, 313],
+                    [368, 313],
+                    [367, 311],
+                    [232, 387],
+                    [235, 392],
+                    [235, 393],
+                  ],
+                },
+              ],
+              width: '640',
+              height: '480',
+            },
+          },
+          {
             role: 'conveyor',
+            id: 'asdfg2',
           },
           {
             role: 'painter',
+            id: 'asdh4gd',
             image: {
               lines: [
                 {
@@ -98,4 +139,11 @@ const exampleGameState = {
   },
 }
 
-export const Example = () => <GameVoting gameStateObj={exampleGameState} />
+const mockSocket = {
+  id: 'fdasef2',
+  emit: action('socket emit'),
+}
+
+export const Example = () => (
+  <GameVoting socket={mockSocket} gameStateObj={exampleGameState} />
+)
