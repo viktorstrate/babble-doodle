@@ -9,6 +9,10 @@ export default function BabbleDoodle({ Component, pageProps }) {
     <>
       <Head>
         <script src="/socket.io/socket.io.js"></script>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Delius&display=swap"
+          rel="stylesheet"
+        />
       </Head>
       <Component {...pageProps} />
     </>

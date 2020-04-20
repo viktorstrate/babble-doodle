@@ -6,6 +6,7 @@ import GameLobby from './GameLobby/GameLobby'
 import gameEvents from './gameEvents'
 import runningGameEvents from './GameRunning/runningGameEvents'
 import GameRunning from './GameRunning/GameRunning'
+import Logo from '../Logo/Logo'
 
 export default function Game() {
   const router = useRouter()
@@ -70,9 +71,7 @@ export default function Game() {
 
   return (
     <Layout>
-      <h1>Babble Doodle Game</h1>
-      <p>Welcome to game: {gameState.gameId}</p>
-      <p>Your id {socket.id}</p>
+      <Logo centered />
       {stateElm}
     </Layout>
   )

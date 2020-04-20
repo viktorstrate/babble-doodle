@@ -1,19 +1,34 @@
 import React from 'react'
 import DrawingCanvas from '../../DrawingCanvas/DrawingCanvas'
+import styled from 'styled-components'
 
-export default function ConnectedPlayers({ players }) {
+const ConnectedPlayerContainer = styled.div`
+  display: inline-block;
+  margin: 12px;
+`
+
+const PlayerCanvas = styled(DrawingCanvas)`
+  width: 150px;
+  height: 150px;
+
+  ${({ localPlayer }) =>
+    localPlayer &&
+    `
+      border-color: #ffc974;
+  `}
+`
+
+export default function ConnectedPlayers({ players, socketId }) {
   return (
     <div>
       <h2>Connected players</h2>
       {players.map(player => (
-        <div key={player.id}>
-          <p>Player: {player.id}</p>
-          <DrawingCanvas
-            width="150"
-            height="150"
+        <ConnectedPlayerContainer key={player.id}>
+          <PlayerCanvas
+            localPlayer={player.id == socketId}
             imageState={{ image: player.image }}
           />
-        </div>
+        </ConnectedPlayerContainer>
       ))}
     </div>
   )

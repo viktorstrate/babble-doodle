@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import { useRouter } from 'next/router'
+import Logo from '../components/Logo/Logo'
 
 const newGame = router => async () => {
   let res = await fetch('/api/new-game', {
@@ -27,7 +28,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <h1>Babble Doodle</h1>
+      <Logo />
       <p>A social party game about drawing and explaining</p>
       <button onClick={newGame(router)}>New game</button>
     </Layout>

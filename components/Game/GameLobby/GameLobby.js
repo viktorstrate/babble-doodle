@@ -20,7 +20,7 @@ export default function GameLobby({ socket, gameStateObj }) {
   return (
     <div>
       {joinGame}
-      <ConnectedPlayers players={gameState.players} />
+      <ConnectedPlayers socketId={socket.id} players={gameState.players} />
       <div>
         <button disabled={startDisabled} onClick={onStartGame(socket)}>
           Start the game

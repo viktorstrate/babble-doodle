@@ -59,7 +59,6 @@ const newRound = async (room, gameState) => {
   const participatingPlayers = findParticipatingPlayers(gameState)
   participatingPlayers.forEach(participant => {
     participant.client.on('participant-paint', ({ image }) => {
-      console.log('Updating participant painting')
       gameState.round.users[participant.user.id].image = image
     })
   })
