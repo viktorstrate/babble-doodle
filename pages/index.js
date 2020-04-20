@@ -1,6 +1,7 @@
 import React from 'react'
 import Layout from '../components/Layout'
 import { useRouter } from 'next/router'
+import Button from '../components/Button'
 import Logo from '../components/Logo/Logo'
 
 const newGame = router => async () => {
@@ -30,7 +31,7 @@ export default function Home() {
     <Layout>
       <Logo />
       <p>A social party game about drawing and explaining</p>
-      <button onClick={newGame(router)}>New game</button>
+      <Button onClick={newGame(router)}>New game</Button>
     </Layout>
   )
 }

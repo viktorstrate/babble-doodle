@@ -4,6 +4,7 @@ import DrawingCanvas, {
 } from '../../DrawingCanvas/DrawingCanvas'
 import { useState } from 'react'
 import styled from 'styled-components'
+import Button from '../../Button'
 
 const YourCharacterCanvas = styled(DrawingCanvas)`
   width: 200px;
@@ -28,12 +29,12 @@ export default function JoinGame({ socket, gameStateObj }) {
         imageState={imageState}
       />
       <br />
-      <button
+      <Button
         disabled={socket == null || imageState.image.lines.length == 0}
         onClick={() => joinGame(socket, imageState.image, gameStateObj)}
       >
         Join game
-      </button>
+      </Button>
     </div>
   )
 }

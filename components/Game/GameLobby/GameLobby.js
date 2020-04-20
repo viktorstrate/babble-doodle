@@ -2,6 +2,7 @@ import React from 'react'
 import JoinGame from './JoinGame'
 import ConnectedPlayers from './ConnectedPlayers'
 import { localPlayer } from '../helpers'
+import Button from '../../Button'
 
 const onStartGame = socket => () => {
   socket.emit('start-game')
@@ -17,14 +18,27 @@ export default function GameLobby({ socket, gameStateObj }) {
 
   const startDisabled = joinGame != null || gameState.players.length < 3
 
+  let morePlayersText = null
+  if (startDisabled) {
+    morePlayersText = (
+      <p>
+        <i>
+          {3 - gameState.players.length} more players are needed to join the
+          game.
+        </i>
+      </p>
+    )
+  }
+
   return (
     <div>
       {joinGame}
       <ConnectedPlayers socketId={socket.id} players={gameState.players} />
       <div>
-        <button disabled={startDisabled} onClick={onStartGame(socket)}>
+        <Button disabled={startDisabled} onClick={onStartGame(socket)}>
           Start the game
-        </button>
+        </Button>
+        {morePlayersText}
       </div>
     </div>
   )
