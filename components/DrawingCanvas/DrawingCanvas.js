@@ -11,6 +11,7 @@ const StyledCanvas = styled.canvas`
   border: 2px solid #ccc;
   touch-action: none;
   background-color: white;
+  user-select: none;
 `
 
 const redraw = ctx => ({ state }) => {

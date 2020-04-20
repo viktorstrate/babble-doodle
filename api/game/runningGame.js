@@ -38,7 +38,7 @@ const newRound = async (room, gameState) => {
     state: 'drawing',
   }
 
-  const endTime = Date.now() + 10 * 1000
+  const endTime = Date.now() + 2 * 60 * 1000 // 2 minutes
 
   console.log('Starting new round', JSON.stringify(gameState.round))
   room.emit('new-round', {
