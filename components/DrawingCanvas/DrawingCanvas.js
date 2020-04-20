@@ -23,19 +23,19 @@ const redraw = ctx => ({ state }) => {
     for (const i in line.path) {
       const [x, y] = line.path[i]
 
-      if (i == 0) {
-        ctx.moveTo(x * CANVAS_SCALE, y * CANVAS_SCALE)
-        continue
-      }
-
       ctx.lineTo(x * CANVAS_SCALE, y * CANVAS_SCALE)
+
+      // Show dot if line consists of a single point
+      if (line.path.length == 1)
+        ctx.lineTo(x * CANVAS_SCALE + 1, y * CANVAS_SCALE + 1)
     }
+
     ctx.stroke()
   }
 }
 
-export const startDrawing = ({ state, setState }) => {
-  const lines = [{ path: [] }, ...state.image.lines]
+export const startDrawing = ({ state, setState }, point) => {
+  const lines = [{ path: [[point.x, point.y]] }, ...state.image.lines]
 
   setState({
     ...state,
@@ -135,7 +135,7 @@ export default function DrawingCanvas({
   const mouseUp = canvasMouseUp(canvasEl)(stateObj)
   const mouseMove = canvasMouseMove(canvasEl)(stateObj)
 
-  const touchStart = canvasTouchStart(stateObj)
+  const touchStart = canvasTouchStart(canvasEl)(stateObj)
   const touchEnd = canvasTouchEnd(stateObj)
   const touchMove = canvasTouchMove(canvasEl)(stateObj)
 

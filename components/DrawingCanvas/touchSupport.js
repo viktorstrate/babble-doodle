@@ -1,9 +1,10 @@
 import { startDrawing, endDrawing, drawMove } from './DrawingCanvas'
 
-export const canvasTouchStart = stateObj => event => {
+export const canvasTouchStart = canvasEl => stateObj => event => {
   event.preventDefault()
 
-  startDrawing(stateObj)
+  const point = touchPos(canvasEl.current, event)
+  startDrawing(stateObj, point)
 }
 
 export const canvasTouchEnd = stateObj => event => {
