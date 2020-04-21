@@ -22,7 +22,7 @@ export default function Game() {
   })
   const gameStateObj = { gameState, setGameState }
 
-  console.log('gameState', gameState)
+  useEffect(() => console.log('gameState', gameState), [gameState])
 
   useEffect(() => {
     if (game_id == null) return

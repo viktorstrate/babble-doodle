@@ -4,9 +4,11 @@ export default function CountdownTimer({ time }) {
   const [timeLeft, setTimeLeft] = useState(time)
 
   useEffect(() => {
+    const updateInterval = 100
+
     const interval = setInterval(() => {
       setTimeLeft(timeLeft => {
-        const newTimeLeft = timeLeft - 1000
+        const newTimeLeft = timeLeft - updateInterval
 
         if (newTimeLeft <= 0) {
           return 0
@@ -14,7 +16,7 @@ export default function CountdownTimer({ time }) {
 
         return newTimeLeft
       })
-    }, 1000)
+    }, updateInterval)
 
     return () => {
       clearInterval(interval)
@@ -25,5 +27,5 @@ export default function CountdownTimer({ time }) {
     return <div>{"Time's up"}</div>
   }
 
-  return <div>Time left: {timeLeft / 1000} seconds</div>
+  return <div>Time left: {(timeLeft / 1000).toFixed(1)} seconds</div>
 }

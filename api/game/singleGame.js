@@ -21,14 +21,16 @@ const setupGame = (io, game) => {
     // Emit to new player
     emitGameDetails(client, gameState)
 
-    const user = await userJoin(client)
-    gameState.players.push(user)
+    const player = await userJoin(client)
+    gameState.players.push(player)
     console.log(
       `client connected to room: ${gameState.players.length} players connected`
     )
 
     if (gameState.state == 'running' && gameState.round.state == 'drawing') {
       // Let the newly joined player be a participant
+      runningGame.setupNewParticipant(gameState, player)
+      emitRoundDetails(client, gameState)
     }
 
     // Emit to all players
@@ -102,6 +104,15 @@ const emitGameDetails = (socket, gameState) => {
   socket.emit('game-details', {
     players: gameState.players.map(x => x.user),
     state: gameState.state,
+  })
+}
+
+const emitRoundDetails = (socket, gameState) => {
+  socket.emit('round-details', {
+    round: {
+      ...gameState.round,
+      countdownTime: Math.max(0, gameState.round.serverFinishTime - Date.now()),
+    },
   })
 }
 

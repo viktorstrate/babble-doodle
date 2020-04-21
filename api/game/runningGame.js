@@ -28,26 +28,15 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
   if (isCanceled()) return false
 
   // Round setup
-  gameState.round = {
-    users: distributeRoles(gameState),
-    state: 'drawing',
-  }
-
   let countdownTime = 2 * 60 * 1000 // 2 minutes
 
   if (process.env.NODE_ENV != 'production') {
     countdownTime = 10 * 1000 // 10 seconds in development
   }
 
-  console.log('Starting new round', JSON.stringify(gameState.round))
-  room.emit('new-round', {
-    ...gameState.round,
-    countdownTime,
-  })
+  setupRound({ room, gameState, countdownTime })
 
   // Round events
-  console.log('listening to painter-paint event')
-
   const playersByRole = groupBy(
     gameState.players,
     player => gameState.round.users[player.user.id].role
@@ -63,9 +52,7 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
 
   const participatingPlayers = playersByRole[PlayerRole.PARTICIPANT]
   participatingPlayers.forEach(participant => {
-    participant.client.on('participant-paint', ({ image }) => {
-      gameState.round.users[participant.user.id].image = image
-    })
+    registerParticipantPaintEvent(gameState, participant)
   })
 
   console.log('Round in progress')
@@ -162,6 +149,31 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
   return true
 }
 
+const setupRound = ({ room, gameState, countdownTime }) => {
+  gameState.round = {
+    users: distributeRoles(gameState),
+    state: 'drawing',
+    serverFinishTime: Date.now() + countdownTime,
+  }
+
+  console.log('Starting new round', JSON.stringify(gameState.round))
+  room.emit('new-round', {
+    ...gameState.round,
+    countdownTime,
+  })
+}
+
+const registerParticipantPaintEvent = (gameState, player) => {
+  player.client.on('participant-paint', ({ image }) => {
+    gameState.round.users[player.user.id].image = image
+  })
+}
+
+const setupNewParticipant = (gameState, player) => {
+  gameState.round.users[player.user.id] = { role: PlayerRole.PARTICIPANT }
+  registerParticipantPaintEvent(gameState, player)
+}
+
 const wait = ms =>
   new Promise(done => {
     setTimeout(done, ms)
@@ -191,5 +203,6 @@ const distributeRoles = ({ players }) => {
 
 module.exports = {
   setupRunningGame,
+  setupNewParticipant,
   PlayerRole,
 }

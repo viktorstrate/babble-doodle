@@ -19,7 +19,7 @@ export default function GameLobby({ socket, gameStateObj }) {
   const startDisabled = joinGame != null || gameState.players.length < 3
 
   let morePlayersText = null
-  if (startDisabled) {
+  if (startDisabled && gameState.players.length < 3) {
     morePlayersText = (
       <p>
         <i>
@@ -32,8 +32,7 @@ export default function GameLobby({ socket, gameStateObj }) {
 
   let gameInProgressText = null
   if (gameState.state != 'lobby') {
-    gameInProgressText =
-      'The game is currently in progress, join to participate in the next round'
+    gameInProgressText = 'The game is currently in progress'
   }
 
   return (

@@ -13,6 +13,14 @@ export default ({ socket, setSocketConnected, setGameState }) => {
     }))
   })
 
+  socket.on('round-details', ({ round }) => {
+    console.log('Round details:', round)
+    setGameState(gameState => ({
+      ...gameState,
+      round,
+    }))
+  })
+
   socket.on('connected-players', ({ players }) => {
     console.log('Connected players', players)
     setGameState(gameState => ({
