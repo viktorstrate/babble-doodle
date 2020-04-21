@@ -47,16 +47,16 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
     state: 'drawing',
   }
 
-  let endTime = Date.now() + 2 * 60 * 1000 // 2 minutes
+  let countdownTime = 2 * 60 * 1000 // 2 minutes
 
   if (process.env.NODE_ENV != 'production') {
-    endTime = Date.now() + 10 * 1000 // 10 seconds in development
+    countdownTime = 10 * 1000 // 10 seconds in development
   }
 
   console.log('Starting new round', JSON.stringify(gameState.round))
   room.emit('new-round', {
     ...gameState.round,
-    endTime,
+    countdownTime,
   })
 
   // Round events
@@ -78,7 +78,7 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
 
   console.log('Round in progress')
 
-  await wait(endTime - Date.now())
+  await wait(countdownTime)
 
   console.log('Round finished')
 

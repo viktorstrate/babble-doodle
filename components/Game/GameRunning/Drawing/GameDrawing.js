@@ -27,7 +27,7 @@ export default function GameDrawing({ socket, gameStateObj }) {
 
   return (
     <div>
-      <CountdownTimer endTime={gameState.round.endTime} />
+      <CountdownTimer time={gameState.round.countdownTime} />
       {roleEl}
     </div>
   )
