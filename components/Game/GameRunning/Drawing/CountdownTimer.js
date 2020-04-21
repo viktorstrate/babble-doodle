@@ -27,5 +27,5 @@ export default function CountdownTimer({ time }) {
     return <div>{"Time's up"}</div>
   }
 
-  return <div>Time left: {(timeLeft / 1000).toFixed(1)} seconds</div>
+  return <div>Time left: {(timeLeft / 1000).toFixed(0)} seconds</div>
 }
