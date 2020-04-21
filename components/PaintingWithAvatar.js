@@ -13,12 +13,23 @@ const AvatarCanvas = styled(DrawingCanvas)`
   position: absolute;
   top: 0;
   right: 0;
+
+  ${({ localPlayer }) =>
+    localPlayer &&
+    `
+    border-color: orange;
+  `}
 `
 
-export default function PaintingWithAvatar({ avatarImage, paintingImage }) {
+export default function PaintingWithAvatar({
+  avatarImage,
+  paintingImage,
+  localPlayer = false,
+}) {
   return (
     <Container>
       <AvatarCanvas
+        localPlayer={localPlayer}
         imageState={{
           image: avatarImage,
         }}

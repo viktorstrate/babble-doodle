@@ -1,6 +1,7 @@
 import React from 'react'
 import { action } from '@storybook/addon-actions'
 import GameVoting from './GameVoting'
+import Layout from '../../../Layout'
 
 export default {
   title: 'Voting',
@@ -145,5 +146,7 @@ const mockSocket = {
 }
 
 export const Example = () => (
-  <GameVoting socket={mockSocket} gameStateObj={exampleGameState} />
+  <Layout>
+    <GameVoting socket={mockSocket} gameStateObj={exampleGameState} />
+  </Layout>
 )
