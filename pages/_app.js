@@ -6,6 +6,7 @@ export default function BabbleDoodle({ Component, pageProps }) {
     <>
       <Head>
         <script src="/socket.io/socket.io.js"></script>
+        <title>Babble Doodle</title>
       </Head>
       <Component {...pageProps} />
     </>

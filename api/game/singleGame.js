@@ -27,6 +27,10 @@ const setupGame = (io, game) => {
       `client connected to room: ${gameState.players.length} players connected`
     )
 
+    if (gameState.state == 'running' && gameState.round.state == 'drawing') {
+      // Let the newly joined player be a participant
+    }
+
     // Emit to all players
     emitPlayers(room, gameState)
 
@@ -98,7 +102,6 @@ const emitGameDetails = (socket, gameState) => {
   socket.emit('game-details', {
     players: gameState.players.map(x => x.user),
     state: gameState.state,
-    round: gameState.round,
   })
 }
 

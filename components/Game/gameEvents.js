@@ -4,11 +4,12 @@ export default ({ socket, setSocketConnected, setGameState }) => {
     setSocketConnected(true)
   })
 
-  socket.on('game-details', gameStateUpdates => {
-    console.log('Game updates:', gameStateUpdates)
+  socket.on('game-details', ({ players, state }) => {
+    console.log('Game updates:', state)
     setGameState(gameState => ({
       ...gameState,
-      ...gameStateUpdates,
+      players,
+      state,
     }))
   })
 
