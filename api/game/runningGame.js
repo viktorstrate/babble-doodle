@@ -1,3 +1,5 @@
+const groupBy = require('lodash/groupBy')
+
 const PlayerRole = {
   PAINTER: 'painter',
   CONVEYOR: 'conveyor',
@@ -22,22 +24,6 @@ const setupRunningGame = async (room, gameState) => {
   }
 }
 
-const findConveyorPlayer = gameState =>
-  gameState.players.find(
-    player => gameState.round.users[player.user.id].role == PlayerRole.CONVEYOR
-  )
-
-const findPainterPlayer = gameState =>
-  gameState.players.find(
-    player => gameState.round.users[player.user.id].role == PlayerRole.PAINTER
-  )
-
-const findParticipatingPlayers = gameState =>
-  gameState.players.filter(
-    player =>
-      gameState.round.users[player.user.id].role == PlayerRole.PARTICIPANT
-  )
-
 const newRound = async (room, gameState, isCanceled = () => false) => {
   if (isCanceled()) return false
 
@@ -61,15 +47,21 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
 
   // Round events
   console.log('listening to painter-paint event')
-  const painterPlayer = findPainterPlayer(gameState)
+
+  const playersByRole = groupBy(
+    gameState.players,
+    player => gameState.round.users[player.user.id].role
+  )
+
+  const painterPlayer = playersByRole[PlayerRole.PAINTER][0]
   painterPlayer.client.on('painter-paint', ({ image }) => {
     gameState.round.users[painterPlayer.user.id].image = image
 
-    const conveyorPlayer = findConveyorPlayer(gameState)
+    const conveyorPlayer = playersByRole[PlayerRole.CONVEYOR][0]
     conveyorPlayer.client.emit('painter-paint', { image })
   })
 
-  const participatingPlayers = findParticipatingPlayers(gameState)
+  const participatingPlayers = playersByRole[PlayerRole.PARTICIPANT]
   participatingPlayers.forEach(participant => {
     participant.client.on('participant-paint', ({ image }) => {
       gameState.round.users[participant.user.id].image = image
