@@ -83,6 +83,7 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
   if (isCanceled()) return
 
   // Voting
+  const votingTimeout = 24 * 1000
   gameState.round.state = 'voting'
 
   const result = {
@@ -104,10 +105,14 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
 
           player.client.emit('vote-acknowledged', { id })
         })
+
+        setTimeout(() => done(null), votingTimeout)
       })
   )
 
-  const playerVotes = await Promise.all(playerVotePromises)
+  let playerVotes = await Promise.all(playerVotePromises)
+  playerVotes = playerVotes.filter(vote => vote != null)
+
   if (isCanceled()) return false
 
   console.log('All votes are in', playerVotes)
