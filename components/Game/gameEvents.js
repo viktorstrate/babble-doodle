@@ -5,7 +5,7 @@ export default ({ socket, setSocketConnected, setGameState }) => {
   })
 
   socket.on('game-details', ({ players, state }) => {
-    console.log('connected players:', players)
+    console.log('connected players:', players, state)
     setGameState(gameState => ({
       ...gameState,
       players,

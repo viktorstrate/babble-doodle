@@ -9,9 +9,16 @@ const setupRunningGame = async (room, gameState) => {
   gameState.state = 'running'
   room.emit('game-started')
 
+  const runningGameInternalId = gameState.internalId
+  const isCanceled = () => {
+    const canceled = gameState.internalId != runningGameInternalId
+    if (canceled) console.log('Game is canceled')
+    return canceled
+  }
+
   let playAnotherRound = true
   while (playAnotherRound) {
-    playAnotherRound = await newRound(room, gameState)
+    playAnotherRound = await newRound(room, gameState, isCanceled)
   }
 }
 
@@ -31,14 +38,20 @@ const findParticipatingPlayers = gameState =>
       gameState.round.users[player.user.id].role == PlayerRole.PARTICIPANT
   )
 
-const newRound = async (room, gameState) => {
+const newRound = async (room, gameState, isCanceled = () => false) => {
+  if (isCanceled()) return false
+
   // Round setup
   gameState.round = {
     users: distributeRoles(gameState),
     state: 'drawing',
   }
 
-  const endTime = Date.now() + 2 * 60 * 1000 // 2 minutes
+  let endTime = Date.now() + 2 * 60 * 1000 // 2 minutes
+
+  if (process.env.NODE_ENV != 'production') {
+    endTime = Date.now() + 10 * 1000 // 10 seconds in development
+  }
 
   console.log('Starting new round', JSON.stringify(gameState.round))
   room.emit('new-round', {
@@ -71,7 +84,14 @@ const newRound = async (room, gameState) => {
 
   // Drawing teardown
 
-  gameState.state = 'voting'
+  gameState.players.forEach(player =>
+    player.client.removeAllListeners(['painter-paint', 'participant-paint'])
+  )
+
+  if (isCanceled()) return
+
+  // Voting
+  gameState.round.state = 'voting'
 
   const result = {
     players: gameState.players.map(player => ({
@@ -80,16 +100,9 @@ const newRound = async (room, gameState) => {
     })),
   }
 
-  gameState.players.forEach(player =>
-    player.client.removeAllListeners(['painter-paint', 'participant-paint'])
-  )
-
   room.emit('round-ended', {
     result,
-    state: 'voting',
   })
-
-  // Voting
 
   const playerVotePromises = gameState.players.map(
     player =>
@@ -103,6 +116,8 @@ const newRound = async (room, gameState) => {
   )
 
   const playerVotes = await Promise.all(playerVotePromises)
+  if (isCanceled()) return false
+
   console.log('All votes are in', playerVotes)
 
   // Score
@@ -140,6 +155,7 @@ const newRound = async (room, gameState) => {
   console.log('Waiting for players to vote for a new round')
 
   await Promise.all(playersVotedNewRound)
+  if (isCanceled()) return false
 
   gameState.round = {}
 

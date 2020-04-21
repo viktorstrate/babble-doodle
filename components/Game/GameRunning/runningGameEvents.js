@@ -8,7 +8,7 @@ export default (socket, { setGameState }) => {
     }))
   })
 
-  socket.on('round-ended', ({ result, state }) => {
+  socket.on('round-ended', ({ result }) => {
     console.log('Round ended', result)
 
     setGameState(gameState => ({
@@ -16,7 +16,7 @@ export default (socket, { setGameState }) => {
       round: {
         ...gameState.round,
         result,
-        state,
+        state: 'voting',
       },
     }))
   })

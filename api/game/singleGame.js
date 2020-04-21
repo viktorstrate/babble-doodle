@@ -1,9 +1,11 @@
 const runningGame = require('./runningGame')
+const { makeid } = require('./utils')
 
 const initialGameState = gameId => ({
   players: [],
   state: 'lobby',
   gameId,
+  internalId: makeid(),
 })
 
 const setupGame = (io, game) => {
@@ -38,6 +40,10 @@ const setupGame = (io, game) => {
         `client disconnected from room: ${gameState.players.length} players connected`
       )
 
+      if (gameState.players.length < 3) {
+        resetGameState(gameState)
+      }
+
       emitGameDetails(room, gameState)
 
       if (gameState.players.length == 0) {
@@ -59,6 +65,14 @@ const userJoin = client =>
       })
     })
   })
+
+const resetGameState = gameState => {
+  console.log('Resetting game state', gameState.gameId)
+
+  gameState.state = 'lobby'
+  gameState.internalId = makeid()
+  gameState.round = null
+}
 
 const emitGameDetails = (socket, gameState) => {
   socket.emit('game-details', {
