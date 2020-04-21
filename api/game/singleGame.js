@@ -46,6 +46,18 @@ const setupGame = (io, game) => {
         resetGameState(gameState)
       }
 
+      // If painter or conveyor leaves the game, reset it.
+      if (gameState.state == 'running' && gameState.round.state == 'drawing') {
+        const userRole = gameState.round.users[client.id].role
+        if (
+          userRole &&
+          (userRole == runningGame.PlayerRole.CONVEYOR ||
+            userRole == runningGame.PlayerRole.PAINTER)
+        ) {
+          resetGameState(gameState)
+        }
+      }
+
       emitGameDetails(room, gameState)
 
       if (gameState.players.length == 0) {

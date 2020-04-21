@@ -191,4 +191,5 @@ const distributeRoles = ({ players }) => {
 
 module.exports = {
   setupRunningGame,
+  PlayerRole,
 }
