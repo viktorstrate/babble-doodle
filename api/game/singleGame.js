@@ -18,6 +18,7 @@ const setupGame = (io, game) => {
   room.on('connection', async client => {
     console.log('a user connected to game', game.id)
 
+    // Emit to new player
     emitGameDetails(client, gameState)
 
     const user = await userJoin(client)
@@ -26,7 +27,8 @@ const setupGame = (io, game) => {
       `client connected to room: ${gameState.players.length} players connected`
     )
 
-    emitGameDetails(room, gameState)
+    // Emit to all players
+    emitPlayers(room, gameState)
 
     client.on('start-game', () => {
       startGame(room, gameState)
@@ -74,10 +76,17 @@ const resetGameState = gameState => {
   gameState.round = null
 }
 
+const emitPlayers = (socket, gameState) => {
+  socket.emit('connected-players', {
+    players: gameState.players.map(x => x.user),
+  })
+}
+
 const emitGameDetails = (socket, gameState) => {
   socket.emit('game-details', {
     players: gameState.players.map(x => x.user),
     state: gameState.state,
+    round: gameState.round,
   })
 }
 

@@ -30,9 +30,16 @@ export default function GameLobby({ socket, gameStateObj }) {
     )
   }
 
+  let gameInProgressText = null
+  if (gameState.state != 'lobby') {
+    gameInProgressText =
+      'The game is currently in progress, join to participate in the next round'
+  }
+
   return (
     <div>
       {joinGame}
+      {gameInProgressText}
       <ConnectedPlayers socketId={socket.id} players={gameState.players} />
       <div>
         <Button disabled={startDisabled} onClick={onStartGame(socket)}>

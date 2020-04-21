@@ -93,6 +93,8 @@ const newRound = async (room, gameState, isCanceled = () => false) => {
     })),
   }
 
+  gameState.round.result = result
+
   room.emit('round-ended', {
     result,
   })

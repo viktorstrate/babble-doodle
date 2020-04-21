@@ -7,6 +7,7 @@ import gameEvents from './gameEvents'
 import runningGameEvents from './GameRunning/runningGameEvents'
 import GameRunning from './GameRunning/GameRunning'
 import Logo from '../Logo/Logo'
+import { localPlayer } from './helpers'
 
 export default function Game() {
   const router = useRouter()
@@ -54,11 +55,22 @@ export default function Game() {
   }, [router])
 
   if (!socketConnected) {
-    return <h1>Connecting to room</h1>
+    return (
+      <div>
+        <h1>Connecting to room...</h1>
+        <p>Hang tight</p>
+      </div>
+    )
+  }
+
+  let localGameState = gameState.state
+  const playerHasJoined = !!localPlayer(socket, gameState)
+  if (!playerHasJoined) {
+    localGameState = 'lobby'
   }
 
   let stateElm = null
-  switch (gameState.state) {
+  switch (localGameState) {
     case 'lobby':
       stateElm = <GameLobby socket={socket} gameStateObj={gameStateObj} />
       break
